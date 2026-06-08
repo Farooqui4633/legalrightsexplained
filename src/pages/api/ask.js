@@ -1,14 +1,15 @@
 export const prerender = false;
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
   try {
     const body = await request.json();
+    const apiKey = locals.runtime?.env?.GROQ_API_KEY || import.meta.env.GROQ_API_KEY;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-       'Authorization': 'Bearer ' + (process.env.GROQ_API_KEY || import.meta.env.GROQ_API_KEY)
+        'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
