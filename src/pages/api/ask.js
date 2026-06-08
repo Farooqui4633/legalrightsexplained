@@ -1,9 +1,11 @@
 export const prerender = false;
 
-export async function POST({ request, locals }) {
+import { env } from "cloudflare:workers";
+
+export async function POST({ request }) {
   try {
     const body = await request.json();
-    const apiKey = locals.runtime?.env?.GROQ_API_KEY || import.meta.env.GROQ_API_KEY;
+    const apiKey = env.GROQ_API_KEY || import.meta.env.GROQ_API_KEY;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -17,7 +19,7 @@ export async function POST({ request, locals }) {
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful legal rights assistant for the United States. Answer in very simple plain English that anyone can understand. No legal jargon.'
+            content: 'You are a helpful legal rights assistant for the United States. Answer in very simple plain English. No legal jargon.'
           },
           {
             role: 'user',
